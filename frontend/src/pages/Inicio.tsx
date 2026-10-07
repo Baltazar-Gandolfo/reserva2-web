@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { request } from '../api';
 
-type Health = { status: string; db: string; timestamp: string };
+type Health = { status: string };
 
 export function Inicio() {
   const [health, setHealth] = useState<Health | null>(null);

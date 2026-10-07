@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service.js';
 
 // @Controller('health') = [Route("health")] en un controller de ASP.NET.
 // Junto con el prefijo global "api/v1" (ver main.ts), la ruta final es GET /api/v1/health.
+// Es público a propósito (lo usan monitores y el front), por eso no expone ningún dato del negocio.
 @Public()
 @Controller('health')
 export class HealthController {
@@ -12,8 +13,8 @@ export class HealthController {
 
   @Get() // = [HttpGet]
   async check() {
-    // Cuenta usuarios: si esto responde, la conexión a Postgres funciona de punta a punta.
-    const usuarios = await this.prisma.usuario.count();
-    return { status: 'ok', db: 'conectada', usuarios, timestamp: new Date().toISOString() };
+    // SELECT 1: si la base no responde, lanza y Nest devuelve 500; si responde, la conexión funciona.
+    await this.prisma.$queryRaw`SELECT 1`;
+    return { status: 'ok' };
   }
 }
