@@ -21,12 +21,14 @@ enum EstadoUsuario {
   BLOQUEADO
 }
 
-// Modelo simple de prueba (Fase 0). En la Fase 1 se completa con el resto de campos.
 model Usuario {
   id           Int           @id @default(autoincrement())
   nombre       String
   apellido     String
   email        String        @unique
+  // Obligatorio para ADMINISTRADOR y COMERCIANTE, null para CLIENTE (lo valida el servicio).
+  // Postgres permite varios NULL en una columna @unique, así que los clientes no chocan entre sí.
+  username     String?       @unique
   passwordHash String
   telefono     String?
   rol          Rol           @default(CLIENTE)

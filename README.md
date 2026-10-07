@@ -31,7 +31,19 @@ npm run dev
 ```
 Abrir http://localhost:5173 — debe mostrar la respuesta del `/health`.
 
+## Usuarios de prueba y documentación de API
+
+```bash
+cd backend
+npm run seed     # crea el admin inicial (idempotente)
+```
+Admin de desarrollo (⚠️ cambiar `ADMIN_*` en producción): usuario `admin` / email `admin@reserva2.local` / password `Admin1234!`
+(se definen en `backend/.env`).
+
+Swagger (documentación interactiva): http://localhost:3000/api/docs — usar "Authorize" con el `accessToken` del login.
+
 ## Scripts útiles (backend)
+- `npm run seed` — carga el admin inicial
 - `npm run dev` — arranca con recarga automática
 - `npm run prisma:migrate` — crea/aplica migraciones
 - `npm run prisma:generate` — regenera el cliente de Prisma
