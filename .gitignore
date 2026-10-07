@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+
+# Cliente de Prisma generado (se regenera con `npm run prisma:generate`)
+backend/src/generated/

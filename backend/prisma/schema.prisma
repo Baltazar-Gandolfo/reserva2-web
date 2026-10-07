@@ -1,0 +1,38 @@
+// schema.prisma: es "la fuente de verdad" de tu base de datos.
+// Equivalente en .NET: tus clases de entidad + el DbContext + la configuración de EF Core, todo junto en un archivo.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Rol {
+  ADMINISTRADOR
+  COMERCIANTE
+  CLIENTE
+}
+
+enum EstadoUsuario {
+  ACTIVO
+  BLOQUEADO
+}
+
+// Modelo simple de prueba (Fase 0). En la Fase 1 se completa con el resto de campos.
+model Usuario {
+  id           Int           @id @default(autoincrement())
+  nombre       String
+  apellido     String
+  email        String        @unique
+  passwordHash String
+  telefono     String?
+  rol          Rol           @default(CLIENTE)
+  estado       EstadoUsuario @default(ACTIVO)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@map("Usuario")
+}
