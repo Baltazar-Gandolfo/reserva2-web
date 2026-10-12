@@ -8,3 +8,6 @@ dist/
 
 # Cliente de Prisma generado (se regenera con `npm run prisma:generate`)
 backend/src/generated/
+
+# Cache de compilacion de TypeScript
+*.tsbuildinfo

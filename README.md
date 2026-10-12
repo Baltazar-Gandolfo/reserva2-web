@@ -42,6 +42,13 @@ Admin de desarrollo (⚠️ cambiar `ADMIN_*` en producción): usuario `admin` /
 
 Swagger (documentación interactiva): http://localhost:3000/api/docs — usar "Authorize" con el `accessToken` del login.
 
+## Comercios y sucursales (Fase 2)
+
+- Privado (con token): `/comercios`, `/comercios/:id`, `/comercios/:id/sucursales`, `/sucursales/:id`.
+  Un COMERCIANTE solo ve y edita lo suyo; el ADMINISTRADOR ve todo. No hay DELETE: se desactiva con `estado`.
+- Público (sin token): `GET /api/v1/public/comercios` y `GET /api/v1/public/comercios/:slug`.
+- Frontend: ingresar como comerciante → Panel → Comercios.
+
 ## Scripts útiles (backend)
 - `npm run seed` — carga el admin inicial
 - `npm run dev` — arranca con recarga automática
