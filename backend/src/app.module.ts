@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './auth/auth.module.js';
+import { ComerciosModule } from './comercios/comercios.module.js';
+import { SucursalesModule } from './sucursales/sucursales.module.js';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard.js';
 import { RolesGuard } from './common/guards/roles.guard.js';
 import { HealthController } from './health/health.controller.js';
@@ -18,6 +20,8 @@ import { UsuariosModule } from './usuarios/usuarios.module.js';
     PrismaModule,
     AuthModule,
     UsuariosModule,
+    ComerciosModule,
+    SucursalesModule,
   ],
   controllers: [HealthController],
   providers: [

@@ -36,5 +36,49 @@ model Usuario {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
+  // Lado "1" de la relación 1-N (como un ICollection<Comercio> en la entidad de EF Core).
+  comercios Comercio[]
+
   @@map("Usuario")
+}
+
+enum EstadoComercio {
+  ACTIVO
+  INACTIVO
+}
+
+enum EstadoSucursal {
+  ACTIVA
+  INACTIVA
+}
+
+model Comercio {
+  id            Int            @id @default(autoincrement())
+  nombre        String
+  slug          String         @unique // va en la URL pública: /public/comercios/:slug
+  descripcion   String?
+  estado        EstadoComercio @default(ACTIVO)
+  comercianteId Int
+  // onDelete: Restrict = la base rechaza borrar un usuario que tenga comercios (nada queda huérfano).
+  comerciante   Usuario        @relation(fields: [comercianteId], references: [id], onDelete: Restrict)
+  sucursales    Sucursal[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([comercianteId]) // acelera "los comercios de este comerciante"
+}
+
+model Sucursal {
+  id           Int            @id @default(autoincrement())
+  nombre       String
+  direccion    String
+  telefono     String?
+  horarioTexto String? // texto libre; los horarios estructurados llegan en otra fase
+  estado       EstadoSucursal @default(ACTIVA)
+  comercioId   Int
+  comercio     Comercio       @relation(fields: [comercioId], references: [id], onDelete: Restrict)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([comercioId])
 }

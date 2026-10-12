@@ -33,6 +33,25 @@ export async function request<T>(path: string, { method = 'GET', body, token }: 
 
 export type Rol = 'ADMINISTRADOR' | 'COMERCIANTE' | 'CLIENTE';
 
+export type Comercio = {
+  id: number;
+  nombre: string;
+  slug: string;
+  descripcion: string | null;
+  estado: 'ACTIVO' | 'INACTIVO';
+  comercianteId: number;
+};
+
+export type Sucursal = {
+  id: number;
+  comercioId: number;
+  nombre: string;
+  direccion: string;
+  telefono: string | null;
+  horarioTexto: string | null;
+  estado: 'ACTIVA' | 'INACTIVA';
+};
+
 export type Usuario = {
   id: number;
   nombre: string;
