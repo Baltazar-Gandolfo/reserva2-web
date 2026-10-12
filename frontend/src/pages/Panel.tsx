@@ -24,6 +24,7 @@ export function Panel() {
       <h1>Panel</h1>
       <p>
         <Link to="/">Inicio</Link> ·{' '}
+        {usuario?.rol !== 'CLIENTE' && <><Link to="/comercios">Comercios</Link> · </>}
         <button onClick={() => { logout(); navigate('/login'); }}>Salir</button>
       </p>
       {error && <p className="error">{error}</p>}
