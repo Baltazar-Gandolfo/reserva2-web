@@ -7,5 +7,6 @@ import { SucursalesService } from './sucursales.service.js';
   imports: [ComerciosModule], // para poder inyectar ComerciosService
   controllers: [SucursalesController],
   providers: [SucursalesService],
+  exports: [SucursalesService],
 })
 export class SucursalesModule {}

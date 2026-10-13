@@ -22,6 +22,16 @@ export const sucursalPublicaSelect = {
   horarioTexto: true,
 } as const;
 
+export const recursoPublicoSelect = {
+  id: true,
+  nombre: true,
+  duracionBaseMin: true,
+  duracionMinMin: true,
+  duracionMaxMin: true,
+  requiereAprobacion: true,
+  anticipacionMinCancelacionHoras: true,
+} as const;
+
 export const comercioPublicoSelect = {
   id: true,
   nombre: true,
@@ -40,12 +50,24 @@ export class ComercioResponse {
   @ApiProperty() updatedAt: Date;
 }
 
+export class RecursoPublicoResponse {
+  @ApiProperty() id: number;
+  @ApiProperty() nombre: string;
+  @ApiProperty() duracionBaseMin: number;
+  @ApiProperty() duracionMinMin: number;
+  @ApiProperty() duracionMaxMin: number;
+  @ApiProperty() requiereAprobacion: boolean;
+  @ApiProperty() anticipacionMinCancelacionHoras: number;
+}
+
 export class SucursalPublicaResponse {
   @ApiProperty() id: number;
   @ApiProperty() nombre: string;
   @ApiProperty() direccion: string;
   @ApiPropertyOptional({ nullable: true, type: String }) telefono: string | null;
   @ApiPropertyOptional({ nullable: true, type: String }) horarioTexto: string | null;
+  @ApiProperty({ type: [RecursoPublicoResponse], description: 'Solo recursos ACTIVOS' })
+  recursos: RecursoPublicoResponse[];
 }
 
 export class ComercioPublicoResponse {

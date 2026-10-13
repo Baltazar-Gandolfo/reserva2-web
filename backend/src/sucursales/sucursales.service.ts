@@ -13,6 +13,17 @@ export class SucursalesService {
     private readonly comercios: ComerciosService, // inyectado desde otro módulo (gracias al export)
   ) {}
 
+  // Pertenencia a nivel sucursal: se decide por el dueño del comercio padre. Lo reusa el módulo de reservas.
+  async verificarAcceso(sucursalId: number, user: JwtPayload) {
+    const sucursal = await this.prisma.sucursal.findUnique({
+      where: { id: sucursalId },
+      select: { id: true, comercioId: true },
+    });
+    if (!sucursal) throw new NotFoundException('Sucursal no encontrada');
+    await this.comercios.verificarAcceso(sucursal.comercioId, user);
+    return sucursal;
+  }
+
   async crear(comercioId: number, user: JwtPayload, dto: CreateSucursalDto) {
     await this.comercios.verificarAcceso(comercioId, user); // misma regla de pertenencia que el comercio padre
     return this.prisma.sucursal.create({ data: { ...dto, comercioId }, select: sucursalSelect });

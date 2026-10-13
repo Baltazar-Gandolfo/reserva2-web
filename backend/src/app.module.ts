@@ -4,6 +4,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './auth/auth.module.js';
 import { ComerciosModule } from './comercios/comercios.module.js';
+import { ReservasModule } from './reservas/reservas.module.js';
 import { SucursalesModule } from './sucursales/sucursales.module.js';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard.js';
 import { RolesGuard } from './common/guards/roles.guard.js';
@@ -22,6 +23,7 @@ import { UsuariosModule } from './usuarios/usuarios.module.js';
     UsuariosModule,
     ComerciosModule,
     SucursalesModule,
+    ReservasModule,
   ],
   controllers: [HealthController],
   providers: [

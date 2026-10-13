@@ -1,9 +1,9 @@
 import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { type JwtPayload } from '../common/decorators/current-user.decorator.js';
 import { primerSlugLibre, slugify } from '../common/slug.util.js';
-import { EstadoComercio, EstadoSucursal, Rol } from '../generated/prisma/client.js';
+import { EstadoComercio, EstadoRecurso, EstadoSucursal, Rol } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { comercioPublicoSelect, comercioSelect, sucursalPublicaSelect } from './comercio.response.js';
+import { comercioPublicoSelect, comercioSelect, recursoPublicoSelect, sucursalPublicaSelect } from './comercio.response.js';
 import { CreateComercioDto } from './dto/create-comercio.dto.js';
 import { UpdateComercioDto } from './dto/update-comercio.dto.js';
 
@@ -89,7 +89,11 @@ export class ComerciosService {
         ...comercioPublicoSelect,
         sucursales: {
           where: { estado: EstadoSucursal.ACTIVA },
-          select: sucursalPublicaSelect,
+          select: {
+            ...sucursalPublicaSelect,
+            // Lo que el cliente necesita para elegir y reservar. No se exponen unidades ni configuración interna.
+            recursos: { where: { estado: EstadoRecurso.ACTIVO }, select: recursoPublicoSelect, orderBy: { id: 'asc' } },
+          },
           orderBy: { id: 'asc' },
         },
       },

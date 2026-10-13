@@ -38,6 +38,7 @@ model Usuario {
 
   // Lado "1" de la relación 1-N (como un ICollection<Comercio> en la entidad de EF Core).
   comercios Comercio[]
+  reservas  Reserva[]
 
   @@map("Usuario")
 }
@@ -69,16 +70,96 @@ model Comercio {
 }
 
 model Sucursal {
-  id           Int            @id @default(autoincrement())
+  id           Int                 @id @default(autoincrement())
   nombre       String
   direccion    String
   telefono     String?
   horarioTexto String? // texto libre; los horarios estructurados llegan en otra fase
-  estado       EstadoSucursal @default(ACTIVA)
+  estado       EstadoSucursal      @default(ACTIVA)
   comercioId   Int
-  comercio     Comercio       @relation(fields: [comercioId], references: [id], onDelete: Restrict)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  comercio     Comercio            @relation(fields: [comercioId], references: [id], onDelete: Restrict)
+  unidades     UnidadBase[]
+  recursos     RecursoReservable[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
 
   @@index([comercioId])
+}
+
+enum EstadoRecurso {
+  ACTIVO
+  INACTIVO
+}
+
+enum EstadoReserva {
+  PENDIENTE
+  CONFIRMADA
+  CANCELADA
+  RECHAZADA
+}
+
+// La pieza física indivisible de una sucursal (ej: "Tercio A" de una cancha de 11).
+// La disponibilidad se calcula SIEMPRE sobre unidades: dos reservas chocan si comparten al menos una.
+model UnidadBase {
+  id         Int             @id @default(autoincrement())
+  sucursalId Int
+  sucursal   Sucursal        @relation(fields: [sucursalId], references: [id], onDelete: Restrict)
+  nombre     String
+  recursos   RecursoUnidad[]
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@index([sucursalId])
+}
+
+// Lo que el cliente ve y reserva (ej: "Cancha 11 completa" = 3 unidades; "Cancha 5 — A" = 1 unidad).
+model RecursoReservable {
+  id                              Int             @id @default(autoincrement())
+  sucursalId                      Int
+  sucursal                        Sucursal        @relation(fields: [sucursalId], references: [id], onDelete: Restrict)
+  nombre                          String
+  estado                          EstadoRecurso   @default(ACTIVO)
+  duracionBaseMin                 Int // bloque mínimo (la "grilla"), ej: 30
+  duracionMinMin                  Int // duración mínima permitida (múltiplo de la base)
+  duracionMaxMin                  Int // duración máxima permitida (si no hay variación, min == max)
+  requiereAprobacion              Boolean         @default(false)
+  anticipacionMinCancelacionHoras Int             @default(0)
+  unidades                        RecursoUnidad[]
+  reservas                        Reserva[]
+  createdAt                       DateTime        @default(now())
+  updatedAt                       DateTime        @updatedAt
+
+  @@index([sucursalId])
+}
+
+// Tabla puente muchos-a-muchos Recurso <-> Unidad. La clave primaria es la combinación de ambos ids.
+model RecursoUnidad {
+  recursoId Int
+  unidadId  Int
+  recurso   RecursoReservable @relation(fields: [recursoId], references: [id], onDelete: Cascade)
+  unidad    UnidadBase        @relation(fields: [unidadId], references: [id], onDelete: Restrict)
+
+  @@id([recursoId, unidadId])
+  @@index([unidadId]) // la consulta de choques busca "recursos que usan estas unidades"
+}
+
+model Reserva {
+  id                     Int               @id @default(autoincrement())
+  recursoId              Int
+  recurso                RecursoReservable @relation(fields: [recursoId], references: [id], onDelete: Restrict)
+  horaInicio             DateTime
+  horaFin                DateTime
+  estado                 EstadoReserva
+  // null = la cargó el comerciante para alguien sin cuenta (entonces nombre y teléfono de contacto son obligatorios)
+  clienteId              Int?
+  cliente                Usuario?          @relation(fields: [clienteId], references: [id], onDelete: Restrict)
+  nombreContacto         String?
+  telefonoContacto       String?
+  // Se completa solo al cancelar: true si se canceló con la anticipación mínima del recurso.
+  canceladaDentroDePlazo Boolean?
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+
+  @@index([recursoId, horaInicio])
+  @@index([clienteId])
 }
