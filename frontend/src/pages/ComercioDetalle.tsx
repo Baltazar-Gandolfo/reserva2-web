@@ -75,7 +75,7 @@ export function ComercioDetalle() {
       <h1>{comercio.nombre}</h1>
       <p><Link to="/comercios">← Mis comercios</Link></p>
       <p>
-        <code>/c/{comercio.slug}</code> · {comercio.estado}
+        <Link to={`/c/${comercio.slug}`}>/c/{comercio.slug}</Link> · {comercio.estado} · <Link to={`/comercios/${comercio.id}/reservas`}>Ver reservas</Link>
         {comercio.descripcion && <><br />{comercio.descripcion}</>}
       </p>
 
@@ -90,7 +90,11 @@ export function ComercioDetalle() {
           <tbody>
             {sucursales.map((s) => (
               <tr key={s.id}>
-                <td>{s.nombre}</td><td>{s.direccion}</td><td>{s.telefono ?? '—'}</td>
+                <td>
+                  {s.nombre}<br />
+                  <Link to={`/sucursales/${s.id}`} state={{ nombre: s.nombre, comercioId: comercio.id }}>Unidades y recursos</Link>
+                </td>
+                <td>{s.direccion}</td><td>{s.telefono ?? '—'}</td>
                 <td>{s.horarioTexto ?? '—'}</td><td>{s.estado}</td>
                 <td><button onClick={() => cambiarEstado(s)}>{s.estado === 'ACTIVA' ? 'Desactivar' : 'Activar'}</button></td>
               </tr>

@@ -49,6 +49,17 @@ Swagger (documentación interactiva): http://localhost:3000/api/docs — usar "A
 - Público (sin token): `GET /api/v1/public/comercios` y `GET /api/v1/public/comercios/:slug`.
 - Frontend: ingresar como comerciante → Panel → Comercios.
 
+## Reservas (Fase 3)
+
+- **Unidad base**: pieza física indivisible. **Recurso**: lo que se reserva; se compone de una o más unidades.
+  Dos reservas chocan si comparten al menos una unidad y se superponen en el tiempo (PENDIENTE/CONFIRMADA).
+- `GET /api/v1/recursos/:id/disponibilidad?fecha=YYYY-MM-DD[&desde=HH:mm&hasta=HH:mm]`
+- `POST /api/v1/reservas`, `GET /reservas/mias`, `GET /reservas?recursoId=&comercioId=`,
+  `PATCH /reservas/:id/aprobar | rechazar | cancelar`
+- Zona horaria del negocio: `APP_TIMEZONE` (por defecto `America/Argentina/Buenos_Aires`).
+- Frontend: página pública `/c/:slug` (reservar), `/reservas/mias`, y para el comerciante
+  `/sucursales/:id` (unidades y recursos) y `/comercios/:id/reservas`.
+
 ## Scripts útiles (backend)
 - `npm run seed` — carga el admin inicial
 - `npm run dev` — arranca con recarga automática

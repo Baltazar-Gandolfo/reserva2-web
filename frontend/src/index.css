@@ -9,3 +9,12 @@ button { padding: 0.5rem 1rem; font-size: 1rem; cursor: pointer; }
 pre { background: #f4f3ec; padding: 0.75rem; overflow: auto; }
 table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
 th, td { border: 1px solid #ddd; padding: 0.35rem 0.5rem; text-align: left; }
+.horarios { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.5rem 0; }
+.horarios button { padding: 0.3rem 0.6rem; }
+button.sel { background: #1a73e8; color: #fff; border-color: #1a73e8; }
+.aviso { background: #e8f5e9; border: 1px solid #a5d6a7; padding: 0.75rem; margin: 1rem 0; }
+.en-linea { flex-direction: row; gap: 0.5rem; }
+label.check { flex-direction: row; align-items: center; gap: 0.4rem; }
+fieldset { border: 1px solid #ddd; }
+.acciones button { margin-right: 0.3rem; }
+section { margin-top: 1.5rem; }

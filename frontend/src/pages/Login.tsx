@@ -1,16 +1,18 @@
 import { useState, type FormEvent } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 
 export function Login() {
   const { usuario, login } = useAuth();
   const navigate = useNavigate();
+  // Si venimos de otra pantalla (ej: la página pública de un comercio), se vuelve ahí después de ingresar.
+  const destino = (useLocation().state as { from?: string } | null)?.from ?? '/panel';
   const [identificador, setIdentificador] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [cargando, setCargando] = useState(false);
 
-  if (usuario) return <Navigate to="/panel" replace />;
+  if (usuario) return <Navigate to={destino} replace />;
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -18,7 +20,7 @@ export function Login() {
     setCargando(true);
     try {
       await login(identificador, password);
-      navigate('/panel');
+      navigate(destino);
     } catch (err) {
       setError((err as Error).message);
     } finally {

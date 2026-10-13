@@ -52,6 +52,82 @@ export type Sucursal = {
   estado: 'ACTIVA' | 'INACTIVA';
 };
 
+export type Unidad = { id: number; sucursalId: number; nombre: string };
+
+export type Recurso = {
+  id: number;
+  sucursalId: number;
+  nombre: string;
+  estado: 'ACTIVO' | 'INACTIVO';
+  duracionBaseMin: number;
+  duracionMinMin: number;
+  duracionMaxMin: number;
+  requiereAprobacion: boolean;
+  anticipacionMinCancelacionHoras: number;
+  unidadIds: number[];
+};
+
+// Lo que expone la ruta pública (sin unidades ni estado).
+export type RecursoPublico = Omit<Recurso, 'sucursalId' | 'estado' | 'unidadIds'>;
+
+export type SucursalPublica = {
+  id: number;
+  nombre: string;
+  direccion: string;
+  telefono: string | null;
+  horarioTexto: string | null;
+  recursos: RecursoPublico[];
+};
+
+export type ComercioPublico = {
+  id: number;
+  nombre: string;
+  slug: string;
+  descripcion: string | null;
+  sucursales: SucursalPublica[];
+};
+
+export type EstadoReserva = 'PENDIENTE' | 'CONFIRMADA' | 'CANCELADA' | 'RECHAZADA';
+
+export type Reserva = {
+  id: number;
+  recursoId: number;
+  horaInicio: string;
+  horaFin: string;
+  estado: EstadoReserva;
+  clienteId: number | null;
+  nombreContacto: string | null;
+  telefonoContacto: string | null;
+  canceladaDentroDePlazo: boolean | null;
+  recurso: {
+    id: number;
+    nombre: string;
+    anticipacionMinCancelacionHoras: number;
+    sucursal: {
+      id: number;
+      nombre: string;
+      direccion: string;
+      telefono: string | null;
+      comercio: { id: number; nombre: string; slug: string };
+    };
+  };
+  cliente: { id: number; nombre: string; apellido: string; email: string; telefono: string | null } | null;
+};
+
+export type Horario = {
+  inicio: string;
+  hora: string;
+  libre: boolean;
+  motivo?: 'OCUPADO' | 'PASADO';
+  duracionesDisponiblesMin: number[];
+};
+
+export type Disponibilidad = {
+  recursoId: number;
+  fecha: string;
+  horarios: Horario[];
+};
+
 export type Usuario = {
   id: number;
   nombre: string;
